@@ -2,12 +2,14 @@ import platform
 import subprocess
 import time
 
+#Sends one ping to the IP address and returns whether the system is up or not based on the output
 def bruh(ip):
     global args
     if platform.system()=='Windows':
         args= f"ping -n 1 {ip}"
     elif platform.system()=='Linux':
         args= f"ping -c 1 {ip}"
+    #Shell=True means the args command is executed by using a shell. The stdout(output) and stderr(error) pipes are combined as per subprocess documentation
     process= subprocess.Popen(args,shell=True,stdout=subprocess.PIPE,stderr=subprocess.STDOUT)
     output= process.stdout.read().decode()
     subs= output.split(" ")
@@ -19,16 +21,19 @@ def bruh(ip):
         elif sub[:7] == 'service':
             return 2
 
-ip=input(print("Enter your network private IP:"))
-start=int(input(print("Enter your scanning start point:")))
-end= int(input(print("Enter your desired end point:")))
+#ip is mainly used for determining the first three octets for the given network
+ip=input("Enter your network private IP:  ")
+#start and end is used for the scanning range and thus the last octet
+start=int(input("Enter your scanning start point:  "))
+end= int(input("Enter your desired end point:  "))
 
 global p
 p=start
 
 time_prev=time.time()
-#exact=time.ctime(time)
-print("Starting scan at :",time_prev)
+#ctime interprets the seconds from time.time as day, time etc.(human understandable date format)
+exact=time.ctime(time_prev)
+print("Starting scan at :",exact)
 
 if (start>=0 and end<256):
     if (start<=end):
